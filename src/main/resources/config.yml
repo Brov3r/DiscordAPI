@@ -1,0 +1,11 @@
+# Your discord bot token
+botToken: "..."
+# Prefix for bot commands
+commandPrefix: "!"
+# API translations
+translation:
+  # Command `help`
+  help:
+    description: "Displays a message about available commands"
+    embedTitle: "Bot Commands"
+    contentTitle: "Available bot commands:"
