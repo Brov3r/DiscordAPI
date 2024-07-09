@@ -29,6 +29,42 @@
 DiscordAPI discordAPI = ServiceManager.getService(DiscordAPI.class);
 ```
 
+## Commands
+
+To add a command, you need to create a new command class by extending `Command` from the Discord API package:
+
+```java
+/**
+ * Example command
+ */
+public class ExampleCommand extends Command {
+    /**
+     * Team constructor. Arguments: command name, description
+     */
+    public ExampleCommand() {
+        super("example", "Example description");
+    }
+
+    /**
+     * Executes the command with the given arguments.
+     *
+     * @param event The MessageCreateEvent triggering the command execution.
+     * @param args  The arguments passed to the command.
+     * @return {@code true} if the command execution was successful, {@code false} otherwise.
+     */
+    @Override
+    public boolean execute(MessageCreateEvent event, String[] args) {
+        return true;
+    }
+}
+```
+
+When initializing the plugin, add the command to the DiscordAPI registry:
+
+```java
+CommandsManager.addCommand(new ExampleCommand());
+```
+
 ## Events
 
 - OnDiscordMessage -> Triggered when a chat message arrives
