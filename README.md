@@ -68,11 +68,26 @@ CommandsManager.addCommand(new ExampleCommand());
 
 ## Events
 
-- OnDiscordMessage -> Triggered when a chat message arrives
+- `OnDiscordCommand` -> Triggered when a chat command arrives
+- `OnDiscordMessage` -> Triggered when a chat message arrives
 
 ## API
 
 ```java
+/**
+ * Retrieves the GatewayDiscordClient instance.
+ *
+ * @return the GatewayDiscordClient instance used for managing the gateway connection.
+ */
+GatewayDiscordClient getGateway();
+
+/**
+ * Retrieves the DiscordClient instance.
+ *
+ * @return the DiscordClient instance used for REST API interactions.
+ */
+DiscordClient getClient();
+
 /**
  * Send a message to a specified channel.
  *

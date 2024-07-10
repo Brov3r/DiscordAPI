@@ -2,6 +2,8 @@ package com.brov3r.discordapi.services;
 
 import com.brov3r.discordapi.Main;
 import discord4j.common.util.Snowflake;
+import discord4j.core.DiscordClient;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.Channel;
@@ -17,6 +19,26 @@ import reactor.core.publisher.Mono;
  */
 public class DiscordAPIImpl implements DiscordAPI {
     /**
+     * Retrieves the {@link GatewayDiscordClient} instance.
+     *
+     * @return the {@link GatewayDiscordClient} instance used for managing the gateway connection.
+     */
+    @Override
+    public GatewayDiscordClient getGateway() {
+        return Main.getGateway();
+    }
+
+    /**
+     * Retrieves the {@link DiscordClient} instance.
+     *
+     * @return the {@link DiscordClient} instance used for REST API interactions.
+     */
+    @Override
+    public DiscordClient getClient() {
+        return Main.getClient();
+    }
+
+    /**
      * Send a message to a specified channel.
      *
      * @param channelId ID of the channel where to send the message
@@ -24,12 +46,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void sendMessage(String channelId, String message) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getChannelById(Snowflake.of(channelId))
+        getGateway().getChannelById(Snowflake.of(channelId))
                 .ofType(MessageChannel.class)
                 .flatMap(channel -> channel.createMessage(message))
                 .subscribe();
@@ -43,12 +65,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void sendEmbedMessage(String channelId, EmbedCreateSpec embedCreateSpec) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getChannelById(Snowflake.of(channelId))
+        getGateway().getChannelById(Snowflake.of(channelId))
                 .ofType(MessageChannel.class)
                 .flatMap(channel -> channel.createMessage(embedCreateSpec))
                 .subscribe();
@@ -63,12 +85,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void sendWebhook(long webhookId, String webhookToken, WebhookExecuteSpec webhookExecuteSpec) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getWebhookByIdWithToken(Snowflake.of(webhookId), webhookToken)
+        getGateway().getWebhookByIdWithToken(Snowflake.of(webhookId), webhookToken)
                 .flatMap(hook -> hook.execute(webhookExecuteSpec)).subscribe();
     }
 
@@ -80,12 +102,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void deleteMessage(String channelId, String messageId) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
+        getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
                 .flatMap(Message::delete)
                 .subscribe();
     }
@@ -99,12 +121,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void editMessage(String channelId, String messageId, MessageEditSpec messageEditSpec) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
+        getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
                 .flatMap(message -> message.edit(messageEditSpec))
                 .subscribe();
     }
@@ -117,12 +139,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public Mono<User> getUserById(String userId) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return Mono.empty();
         }
 
-        return Main.getGateway().getUserById(Snowflake.of(userId));
+        return getGateway().getUserById(Snowflake.of(userId));
     }
 
     /**
@@ -133,12 +155,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public Mono<Channel> getChannelById(String channelId) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return Mono.empty();
         }
 
-        return Main.getGateway().getChannelById(Snowflake.of(channelId));
+        return getGateway().getChannelById(Snowflake.of(channelId));
     }
 
     /**
@@ -150,12 +172,12 @@ public class DiscordAPIImpl implements DiscordAPI {
      */
     @Override
     public void addReaction(String channelId, String messageId, String emoji) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
+        getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
                 .flatMap(message -> message.addReaction(ReactionEmoji.unicode(emoji)))
                 .subscribe();
     }
@@ -166,16 +188,16 @@ public class DiscordAPIImpl implements DiscordAPI {
      * @param channelId the ID of the channel where the message is located
      * @param messageId the ID of the message to remove a reaction from
      * @param userId    the ID user
-     * @param emoji     the emoji to remove
+     * @param emoji     the emoji to remove (unicode)
      */
     @Override
     public void removeReaction(String channelId, String messageId, String userId, String emoji) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
+        getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
                 .flatMap(message -> message.removeReaction(ReactionEmoji.unicode(emoji), Snowflake.of(userId)))
                 .subscribe();
     }
@@ -185,17 +207,17 @@ public class DiscordAPIImpl implements DiscordAPI {
      *
      * @param channelId the ID of the channel where the message is located
      * @param messageId the ID of the message to remove a reaction from
-     * @param emoji     the emoji to remove
+     * @param emoji     the emoji to remove (unicode)
      */
     @Override
     public void removeReaction(String channelId, String messageId, String emoji) {
-        if (Main.getGateway() == null) {
+        if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
 
-        Main.getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
-                .flatMap(message -> message.removeReaction(ReactionEmoji.unicode(emoji), Main.getGateway().getSelfId()))
+        getGateway().getMessageById(Snowflake.of(channelId), Snowflake.of(messageId))
+                .flatMap(message -> message.removeReaction(ReactionEmoji.unicode(emoji), getGateway().getSelfId()))
                 .subscribe();
     }
 }

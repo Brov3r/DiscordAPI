@@ -1,5 +1,6 @@
 package com.brov3r.discordapi.commands;
 
+import com.avrix.events.EventManager;
 import com.brov3r.discordapi.Main;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.reaction.ReactionEmoji;
@@ -70,5 +71,7 @@ public class CommandsManager {
 
         System.out.printf("[#] User '%s' executed Discord command '%s' with arguments: %s%n",
                 userName, commandName, argsString);
+
+        EventManager.invokeEvent("onDiscordCommand", commandName, commandArgs, event);
     }
 }

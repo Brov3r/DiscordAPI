@@ -1,5 +1,7 @@
 package com.brov3r.discordapi.services;
 
+import discord4j.core.DiscordClient;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.Channel;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -13,6 +15,20 @@ import reactor.core.publisher.Mono;
  * as well as other Discord operations.
  */
 public interface DiscordAPI {
+    /**
+     * Retrieves the {@link GatewayDiscordClient} instance.
+     *
+     * @return the {@link GatewayDiscordClient} instance used for managing the gateway connection.
+     */
+    GatewayDiscordClient getGateway();
+
+    /**
+     * Retrieves the {@link DiscordClient} instance.
+     *
+     * @return the {@link DiscordClient} instance used for REST API interactions.
+     */
+    DiscordClient getClient();
+
     /**
      * Send a message to a specified channel.
      *
