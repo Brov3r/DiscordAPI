@@ -25,7 +25,7 @@ public class Main extends Plugin {
     private static Main instance;
     private static GatewayDiscordClient gateway;
     private static DiscordClient client;
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /**
      * Constructs a new {@link Plugin} with the specified metadata.
@@ -47,6 +47,8 @@ public class Main extends Plugin {
         instance = this;
         loadDefaultConfig();
 
+        EventManager.addListener(new ServerShutdownHandler());
+        
         CommandsManager.addCommand(new HelpCommand());
 
         ServiceManager.register(DiscordAPI.class, new DiscordAPIImpl());
