@@ -79,16 +79,30 @@ public class DiscordAPIImpl implements DiscordAPI {
     /**
      * Send a message to a specified webhook.
      *
-     * @param webhookId          The ID of the webhook
-     * @param webhookToken       The token of the webhook
+     * @param webhookUrl         The URL of the webhook
      * @param webhookExecuteSpec The WebhookExecuteSpec containing the message or embed to send
      */
     @Override
-    public void sendWebhook(long webhookId, String webhookToken, WebhookExecuteSpec webhookExecuteSpec) {
+    public void sendWebhook(String webhookUrl, WebhookExecuteSpec webhookExecuteSpec) {
         if (getGateway() == null) {
             System.out.println("[!] Discord API gateway is not initialized!");
             return;
         }
+
+        if (webhookUrl.isEmpty()) {
+            System.out.println("[!] Invalid WebHook URL: " + webhookUrl);
+            return;
+        }
+
+        String[] parts = webhookUrl.split("/");
+
+        if (parts.length < 7) {
+            System.out.println("[!] Invalid WebHook URL: " + webhookUrl);
+            return;
+        }
+
+        String webhookId = parts[5];
+        String webhookToken = parts[6];
 
         getGateway().getWebhookByIdWithToken(Snowflake.of(webhookId), webhookToken)
                 .flatMap(hook -> hook.execute(webhookExecuteSpec)).subscribe();

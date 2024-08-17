@@ -48,11 +48,10 @@ public interface DiscordAPI {
     /**
      * Send a message to a specified webhook.
      *
-     * @param webhookId          The ID of the webhook
-     * @param webhookToken       The token of the webhook
+     * @param webhookUrl         The URL of the webhook
      * @param webhookExecuteSpec The WebhookExecuteSpec containing the message or embed to send
      */
-    void sendWebhook(long webhookId, String webhookToken, WebhookExecuteSpec webhookExecuteSpec);
+    void sendWebhook(String webhookUrl, WebhookExecuteSpec webhookExecuteSpec);
 
     /**
      * Deletes a message in a specified channel.
