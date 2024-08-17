@@ -9,3 +9,5 @@ translation:
     description: "Displays a message about available commands"
     embedTitle: "Bot Commands"
     contentTitle: "Available bot commands:"
+    commandNotFoundTitle: "Command not found"
+    commandNotFoundText: "The command **<COMMAND>** was not found in the list of registered commands!"
